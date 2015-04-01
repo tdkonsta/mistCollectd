@@ -26,5 +26,5 @@ Group-Overrides:
     - web_framework
     - php-5.3
     - web_proxy
-Source-Url: https://github.com/tdkonsta/Collectd-5.4.0.git
+Source-Url: https://github.com/tdkonsta/mistCollectd.git
 
