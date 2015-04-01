@@ -1,0 +1,66 @@
+Hostname    "<%=ENV['OPENSHIFT_GEAR_DNS']%>"
+BaseDir "<%=ENV['OPENSHIFT_COLLECTD_DIR']%>collectd/5.4.0/"
+PluginDir "<%=ENV['OPENSHIFT_COLLECTD_DIR']%>collectd/5.4.0/lib/collectd"
+LoadPlugin logfile
+TypesDB "<%=ENV['OPENSHIFT_COLLECTD_DIR']%>collectd/5.4.0/share/collectd/types.db"
+TypesDB "<%=ENV['OPENSHIFT_COLLECTD_DIR']%>scripts/types.db"
+LoadPlugin uuid
+<Plugin uuid>
+    UUIDFile "<%=ENV['OPENSHIFT_COLLECTD_DIR']%>conf/uuid"
+</Plugin>
+
+LoadPlugin cpu
+<Plugin logfile>
+  LogLevel debug
+  File "<%=ENV['OPENSHIFT_COLLECTD_DIR']%>log/collectd.log"
+  Timestamp true
+  PrintSeverity false
+</Plugin>
+LoadPlugin exec
+<Plugin exec>
+  Exec "<%=ENV['USER']%>" "<%=ENV['OPENSHIFT_COLLECTD_DIR']%>/scripts/openshift.sh"
+</Plugin>
+LoadPlugin processes
+<Plugin "processes">
+  Process "httpd"
+  Process "haproxy/"
+  Process "collectd"
+  Process "logshifter"
+</Plugin>
+
+LoadPlugin load
+<Plugin "load">
+</Plugin>
+
+LoadPlugin memory
+<Plugin "memeory">
+</Plugin>
+
+
+LoadPlugin disk
+<Plugin "disk">
+  Disk "/^sd/"
+  Disk "/^xv/"
+  Disk "/^hd/"
+  IgnoreSelected false
+</Plugin>
+
+LoadPlugin network
+<Plugin "network">
+  <Server "monitor1.mist.io" "25826">		
+	TimeToLive 128
+        SecurityLevel Encrypt		
+        Username "changeme"		
+        Password "changeme"		
+    </Server>		
+    MaxPacketSize 1024		
+    Forward true		
+    ReportStats false
+    	
+</Plugin>
+
+LoadPlugin rrdtool
+<Plugin "rrdtool">
+  DataDir "<%=ENV['OPENSHIFT_COLLECTD_DIR']%>data"
+  StoreRates true
+</Plugin>
